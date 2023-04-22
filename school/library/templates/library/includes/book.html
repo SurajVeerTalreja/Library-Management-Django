@@ -1,0 +1,15 @@
+{% load static %}
+
+<li>
+    <article class='post'>
+        <a href="{% url 'book-detail' book.slug %}">
+            <img src="{{ book.image.url }}" alt="{{ post.title }}">
+            <div class='post__content'>
+                <h3>{{ book.title }}</h3>
+                <p>{{ book.author }}</p>
+                <p>{{ book.publication_date }}</p>
+            </div>
+        </a>
+    </article>
+
+</li>

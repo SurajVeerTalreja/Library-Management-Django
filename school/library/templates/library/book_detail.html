@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}
+    {{ book.title }}
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'library/post-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    {% if form.errors %}
+        <div id='alert'>
+            <h2>Saving the Comment Failed!</h2>
+            <p>Please check the comment box below and fix your errors</p>
+            <a href="#comment-form">Fix</a>
+        </div>
+    {% endif %}
+
+    <section id='summary'>
+        <h2>{{ book.title }}</h2>
+        <h4>Department(s) it belongs to:</h4>
+        <div>
+            {% for department in departments %}    
+                <span class='tag'>{{ department.name }}</span>
+            {% endfor %}
+        </div>
+
+        <div id='read-later'>
+            <form action="{% url 'all-fav-books' %}" method='POST'>
+                {% csrf_token %}
+                <input type="hidden" name="fav_book" value={{ book.id }}>
+                {% if button_pressed %}
+                    <button>Delete from Favourite Book List</button>
+                {% else %}
+                    <button>Favourite Book</button>
+                {% endif %}
+            </form>
+        </div>
+
+        <article>
+            <img src="{{ book.image.url }}" alt="{{ book.title }}">
+            <address>
+                <a href="mailto: {{ book.author.email }}"> By {{ book.author }}</a>
+            </address>
+        </article>
+    </section>
+
+    <main>
+        <p>
+            {{ book.description|linebreaks }}
+        </p>
+    </main>
+
+    <main>
+        <div>
+            <h2>Share your thoughts about the Book</h2>
+        </div>
+    </main>
+
+    <section id='comments'>
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    <h2>{{ comment.user_name }}</h2>
+                    <p>{{ comment.user_text|linebreaks }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section id='comment-form'>
+        <form action="{% url 'book-detail' book.slug %}" method='POST'>
+            {% csrf_token %}
+            {% for field in form  %}
+                <div class='form-control {% if form.errors %}invalid{% endif %}'>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {{ field.errors }}
+                </div>
+            {% endfor %}
+            <button>Save Your Comment</button>
+        </form>
+    </section>
+    
+{% endblock %}

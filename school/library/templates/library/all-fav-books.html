@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}
+    All Favorite Books
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'library/post.css' %}">
+    <link rel="stylesheet" href="{% static 'library/all-posts.css' %}">
+    <link rel="stylesheet" href="{% static 'library/post-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section id="all-posts">
+        <h2>My Favorite Books</h2>
+        {% if list_is_empty %}
+            <p id='read-later-p'>You have not saved any books as favorite!</p>
+        {% else %}
+        <section>
+            <ul>
+                {% for book in fav_books %}
+                    <li>
+                        <article class='post'>
+                            <a href="{% url 'book-detail' book.slug %}">
+                            <img src="{{ book.image.url }}" alt="{{ book.title }}">
+                                <div class='post__content'>
+                                    <h3>{{ book.title }}</h3>
+                                    <p>{{ book.author }}</p>
+                                    <p>{{ book.publication_date }}</p>
+                                </div>
+                            </a>
+                        </article>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </section>
+        {% endif %}
+    </section>
+
+{% endblock %}
